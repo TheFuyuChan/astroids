@@ -10,19 +10,33 @@
     flake-utils.lib.eachDefaultSystem (
       system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = import nixpkgs { inherit system; };
+        python = pkgs.python313;
+        project = "Astroids";
       in
       {
         devShells.default = pkgs.mkShell {
+          name = project;
           packages = [
-            pkgs.python313 # installs python311
+           python
           ];
 
           shellHook = ''
+            set -e
+            if [ -d .venv ]; then
+               source .venv/bin/activate
+               pip install -r requirements.txt
+            else
+              echo "Creating Python virtual environment..."
+              python -m venv .venv
+              echo "Done. Activate it with 'source .venv/bin/activate'"
+            fi
+            clear
             python --version
             echo "Welcome Back Fuyu"
           '';
         };
+
       }
     );
 }
