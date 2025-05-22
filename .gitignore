@@ -5,3 +5,5 @@ tmp/
 .direnv/
 flake.lock
 .venv
+venv/
+__pycache__/
